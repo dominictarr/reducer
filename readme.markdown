@@ -1,101 +1,52 @@
-iterative map reduce
+#reducer
 
-send stream of items to map then to a reduce.
+experimental project for a map-reduce server.
 
-map (doc, id) 
-  this.emit(key, value)
-  
-reduce (collection, value)
-  collection.push(value)
-  returns collection
-  
-documents are written to the m-r server as key value pairs
+I want a node that can incrementally reduce an aggregate, 
+even when values change, and so that multiple map reduce 
+steps can be chained via a stream interface or zero.mq
 
-{id: id, value: value...}
+## example
 
-then mapped to
+suppose you want to calculate the `max` of the following items:
 
-each write to the reduce must have:
+```
+[ {id: 'a', value: 2}
+, {id: 'b', value: 9}
+, {id: 'c', value: 5}
+, {id: 'd', value: 6} ]
+```
+of course, the answer is 'b'.
 
-{key: mKey, id: id, mValue}
+what if value for 'b' changes? 
+the max needs to be recalculated. 
+if N is very large, you may want 
+to avoid reprocessing the whole set.
 
-then, each key is reduced down to a single value.
-if a id is updated, the reduce that is part of must be recalculated.
+this library explores different approaches for efficantly recalculating reduce updates.
 
+## naive
 
-key   id   value
-red    1       3
-red    2       5
-red    3       6
+when a value is updated, the entire reduction is recalculated.
+it's okay fine to use this when N is small, or you know that each new value is unique.
 
-reduce (sum, value) {
-  return sum + value
-}
+O(N)
 
-... a function like that may procede iteratively.
+## smart
 
-if say, id=2 is updated, then the whole reduction must be recalculated.
+stores each intermediate value in a tree structure, so that updates can be recalculated
+with a minimal amount of recalculation.
 
-(naive way: start over)
-(clever, interesting way: store values in tree and just recalc branches)
+on average updates take O(sqrt(N))
 
-tree by ID:
+## unreduce
 
-a
-b ab
-c
-d cd (ab-cd)
-e
-f ef       ((ab-cd)-ef)
+sometimes a reduce function is reversable. for example, "sum" and "count" are reversable, 
+but "max" and "min" are not.
 
-will need to know what reductions each id is a part of.
-a -> ab
-ab -> (ab-cd)
-(ab-cd) -> ((ab-cd)-ef)
+unreduce first unreduces the old value from the total before adding the new value.
 
-will also need to know what sources must be used to recalculate each reduction.
-it's also necessary to recalculate each branch by . . . 
-such a much harder problem than brute-forcing it.
-but that is what makes this interesting.
-
-oh... when a is updated,
-
-update (key) {
-  var value = cache[key]
-  if(value.partof) {
-    var child = update(cache[key].partof)
-    child.from.forEach(function (k) {
-      if(!~rereduce.indexOf(cache[k])) 
-        rereduce.push(cache[k])
-      cache[k]
-    })
-  } else if(value.from) {
-    cache[key] = null 
-    //delete this object from the cache.
-    value.delete = true
-    //mark it as deleted, 
-    //incase it has already been added to the reduce queue
-    //(could happen if more than one value is updated)
-    //when reducing, just skip things that where marked with delete
-  }
-}
-
-if a is part of a further reduction:
-  apply this ru
-remove a's reduction,
-from the cache (recursively)
-
-}
-
-a: {value: {...}, id: a, partof: 'ab'}
-b: {value: {...}, id: b, partof: 'ab'}
-ab:{value: reduce(a,b) id: ab, partof: (ab-cd), from: [a,b]}
-
-run the rereduce now or soon.
-
-that is the cache by id, what about by reduce group?
-
-ah, it's easy. after completing the rereduce queue, the reduction for that group is complete.
+O(1)
 
 # partitioning
 
