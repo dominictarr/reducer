@@ -1,0 +1,11 @@
+{ "name": "reducer"
+, "version": "0.0.0"
+, "description": ""
+, "homepage": "http://github.com/dominictarr/reducer"
+, "repository": 
+  { "type": "git"
+  , "url": "https://github.com/dominictarr/reducer.git" }
+, "dependencies": {}
+, "devDependencies": {}
+, "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://bit.ly/dominictarr)"
+, "scripts": { "test": "meta-test test/*.js" } }
