@@ -1,5 +1,5 @@
 { "name": "reducer"
-, "version": "0.0.0"
+, "version": "0.0.1"
 , "description": "experimental map-reduce server"
 , "homepage": "http://github.com/dominictarr/reducer"
 , "repository": 
