@@ -1,11 +1,16 @@
 { "name": "reducer"
 , "version": "0.0.0"
-, "description": ""
+, "description": "experimental map-reduce server"
 , "homepage": "http://github.com/dominictarr/reducer"
 , "repository": 
   { "type": "git"
   , "url": "https://github.com/dominictarr/reducer.git" }
-, "dependencies": {}
-, "devDependencies": {}
+, "dependencies": {
+    "assertions": "2"
+  , "ubelt": "3"
+  }
+, "devDependencies": {
+    "synct": "1"
+  }
 , "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://bit.ly/dominictarr)"
-, "scripts": { "test": "meta-test test/*.js" } }
+, "scripts": { "test": "synct test/*.js" } }

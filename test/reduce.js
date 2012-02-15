@@ -1,8 +1,8 @@
 
 var a = require('assertions')
-  , bruteforce = require('../group')
-  , smart      = require('../group2')
-  , unreduce   = require('../group3')
+  , bruteforce = require('../brute')
+  , smart      = require('../smart')
+  , unreduce   = require('../unreduce')
 
 function testReduce(g) {
 

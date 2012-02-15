@@ -1,4 +1,3 @@
-//var u = require('ubelt')
 
 module.exports = function (reduce, initial) {
 

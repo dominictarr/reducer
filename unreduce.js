@@ -1,5 +1,16 @@
 var u = require('ubelt')
 
+ /*
+    in some cases reduce is reversable, 
+    sum, avg, count, etc
+    which means it's not necessary to 
+    rereduce anything.
+    
+    just unreduce the old value, then reduce the new...
+
+    min, max, etc are not unreducable.
+  */
+
 module.exports = function (reduce, initial) {
 
   var cache = {}
@@ -12,16 +23,7 @@ module.exports = function (reduce, initial) {
     updates.push(data)
   }
 
-  /*
-    in some cases reduce is reversable, which means it's not necessary to 
-    rereduce anything.
-    
-    just unreduce the old value, then reduce the new...
-
-  */
-
-  exports.reduce = function () { //callback?
-//    var collection = (initial == null ? [] : initial)
+   exports.reduce = function () { //callback?
 
     while(updates.length) {
       var data = updates.shift()
