@@ -1,34 +1,39 @@
 
-
+var reducers = {
+  brute: require('./brute'),
+  smart: require('./smart'),
+  unreduce: require('./unreduce')
+}
 //get the basics right with a brute force implementation.
 
-var cache = {}
-  , queue = []
+function MapReduce (opts) {
 
-//id    - strict identity for this value
-//key   - key for reduce target.
-//value - value to be passed to reduce function.
+  if(!(this instanceof MapReduce)) return new MapReduce(opts)
 
-function addDoc(id, key, value) {
-
-  var cur = cache[id] = {value: value, id: id, key: key}
+  opts = opts || {} 
+  var reduce
+  var type = reducers[opts.unreduce ? 'unreduce' : (opts.type || 'smart')]
+  if (
+    type === reducers.unreduce 
+    && !opts.unreduce 
+  ) 
+    throw new Error('unreduce function required')
   
-  queue.push(cur)
-  
-  // will need a hash of keys, but ignore that for now.
+  reduce = opts.unreduce 
+    ? {reduce: opts.reduce, unreduce: opts.unreduce}
+    : opts.reduce
 
+  function newGroup () {
+    return type(reduce, opts.initial)
+  }
+
+  
 }
 
-function go(reduce, initial) {
-  //solve the reduce queue
-  if(queue.length == 1)
-    return queue.shift()
+MapReduce.prototype.set = function (key, value) {
   
-  initial
-  var b = queue.shift()
-  
-  reduce(a, b)
 }
+
 
 module.exports = function () {
   

@@ -64,6 +64,8 @@ expect check the next bit. thus, as you add servers number them with binary.
 
 the last bits of each hash is the number of the server that doc should be on.
 
+(run the map, and partition on the mapped key?)
+
 # complexity
 
 so, what order of complexity is this compared to brute force.
@@ -80,3 +82,28 @@ if there are 16 items that is only 4 levels.
 that it O(sqrt(N)) ... MUCH LESS.
 
 it's also fully paralizable.
+
+# map
+
+how to add a map phase?
+
+```
+new MapReducer({
+  map: ..., 
+  reduce: ...,
+  type: smart|brute|unreduce //smart is fine if the groups are small.
+  interval: //millseconds to wait before updateing a reducer
+})
+
+function map (value) {
+  this.emit(key, value)
+  //create reduce groups for each distinct key
+  //if the key is an array pipe the results to another mapper.
+}
+
+```
+
+also, query the map reducer? for raw, mapped, and reduced values
+... or just emit reduced values in a stream... or both?
+
+

@@ -55,10 +55,19 @@ module.exports = function (reduce, initial) {
       var left = queue.shift()
       var right = queue.shift()
       var id = uid()
-      var lValue = (!left.from) ? reduce(initial, left.value) : left.value
+      var lValue = (
+        (!left.from)
+        ? reduce(initial, left.value) 
+        : left.value
+      )
       var rValue = reduce(lValue, right.value)
 
-      console.error('reduce(', left.value, ',', right.value, ') =', rValue, lValue)
+/*      console.error(
+        'reduce(', 
+        left.value, ',', 
+        right.value, ') =', 
+        rValue, lValue
+     )*/
 
       var r = head = {
         id: id

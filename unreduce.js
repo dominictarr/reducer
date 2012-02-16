@@ -5,7 +5,7 @@ var u = require('ubelt')
     sum, avg, count, etc
     which means it's not necessary to 
     rereduce anything.
-    
+
     just unreduce the old value, then reduce the new...
 
     min, max, etc are not unreducable.
